@@ -1,0 +1,13 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: Capital-Express-cluster
+  region: us-west-2
+
+nodeGroups:                     ##nodeGroups are the actual container nodes serving the application. Gives level of segregation            
+  - name: ng-1
+    instanceType: t2.medium
+    desiredCapacity: 3         ## Desired nodes needed to run the application
+    ssh:
+      publicKeyName: Linux-keypair-mac-oregon

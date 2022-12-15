@@ -1,0 +1,94 @@
+    ## EKS Setup using the AWS CLI
+    2  apt update -y
+    3  sudo apt update -y
+    4  unzip
+    5  sudo apt install unzip
+    6  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    7  unzip awscliv2.zip
+    8  sudo ./aws/install
+    9  aws --version
+   10  ls -al
+   11  mkdir .aws
+   12  ls
+   16  ls -al
+   17  cat touch ~/.aws/credentials
+   18  touch ~/.aws/credentials
+   19  vi ~/.aws/credentials
+   
+   20  curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+    sudo mv /tmp/eksctl /usr/local/bin
+    eksctl version
+    sudo apt update
+    sudo apt-get update
+    sudo apt-get install -y apt-transport-https
+    curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+    sudo touch /etc/apt/sources.list.d/kubernetes.list
+    echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+    sudo apt-get update
+    sudo apt-get install -y kubectl                 ### to install kubectl utility
+    kubectl version --short --client                ## check the version of kubectl
+    kubectl        
+    mkdir workspace
+    cd workspace
+    vi ESK-Cluster-Setup.yaml
+    #https://eksctl.io/
+    eksctl create cluster -f ESK-Cluster-Setup.yaml             ##eksctl create cluster -f cluster.yaml
+    eksctl get cluster                      # this command will display the cluster name, region
+    eksctl get cluster --region us-west-2
+
+    ## to get the cluster details
+    aws eks --region us-west-2 describe-cluster --name Capital-Express-cluster
+
+    ## to get all the nodegroup in the cluster
+    eksctl get nodegroup --cluster Capital-Express-Cluster --region us-west-2    
+    eksctl get nodegroup --cluster Capital-Express-cluster --region us-west-2
+
+    # 12/09/22 class
+    ## to get all the resources running in the cluster
+    kubectl api-resources
+
+    create two users Kube-Admin and Kube-Developer and save the secret-id and apt-key
+
+    kubectl -n kube-system get cm
+    ## to display the specific configuration that is given in config map for any aws user authentication (you can use -o yaml)
+    kubectl -n kube-system get configmap aws-auth -o json
+    kubectl -n kube-system get configmap aws-auth -o yaml
+
+    #to create configmap then vi into aws-auth-configmap.yaml
+    kubectl -n kube-system get configmap aws-auth -o yaml > aws-auth-configmap.yaml
+
+    # Use  this in the mapuser section
+    - userarn: arn:aws:iam::062675449173:user/Kubernetes-Admin
+      username: Kubernetes-Admin
+      groups:
+        - system:masters
+
+    kubectl apply -f aws-auth-configmap.yaml -n kube-system
+
+    #to view the confirm the apply worked 
+    kubectl -n kube-system get cm aws-auth
+    kubectl -n kube-system describe cm aws-auth
+    # To pass the credentials for the Kubernetes Admin user. Update the secret key and secret key
+    vi .aws/credentials
+
+    [Kubernetes-Admin]
+    aws_access_key_id=AKIAQ5F57OVKWWENPXMM
+    aws_secret_access_key=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
+    region=us-east-1
+    output=jso
+
+    #to save
+    :wq! 
+    ## to the identify details of the aws user (user iD, account-id, arn)
+    aws sts get-caller-identity 
+    ## to change use to a specific user profile...this case Kubernetes-Admin
+    export AWS_PROFILE="your_admin_name"
+    export AWS_PROFILE="Kubernetes-Admin"
+    #to re-check user details
+    aws sts get-caller-identity 
+
+    cd voting-web-app
+    ls
+    cat voting-app-service.yml 
+    
+
