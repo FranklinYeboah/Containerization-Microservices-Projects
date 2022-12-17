@@ -58,7 +58,7 @@
     kubectl -n kube-system get configmap aws-auth -o yaml > aws-auth-configmap.yaml
 
     # Use  this in the mapuser section
-    - userarn: arn:aws:iam::062675449173:user/Kubernetes-Admin
+    - userarn: arn:aws:iam::account-id:user/Kubernetes-Admin
       username: Kubernetes-Admin
       groups:
         - system:masters
@@ -72,8 +72,8 @@
     vi .aws/credentials
 
     [Kubernetes-Admin]
-    aws_access_key_id=AKIAQ5F57OVKWWENPXMM
-    aws_secret_access_key=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
+    aws_access_key_id=xxxx
+    aws_secret_access_key=xxxx
     region=us-east-1
     output=jso
 
